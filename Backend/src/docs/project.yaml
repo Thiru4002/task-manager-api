@@ -1,0 +1,206 @@
+tags:
+  - name: Projects
+    description: Project management APIs (projects , activity logs)
+
+paths:
+
+  # =========================
+  # PROJECT CORE
+  # =========================
+  
+  /projects:
+    post:
+      summary: Create a new project
+      tags: [Projects]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  example: Task Manager
+                description:
+                  type: string
+      responses:
+        201:
+          description: Project created successfully
+        400:
+          description: Project name is required
+        401:
+          description: Unauthorized
+
+    get:
+      summary: Get all projects (owner or member)
+      tags: [Projects]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Projects fetched successfully
+        401:
+          description: Unauthorized
+
+  # =========================
+  # PROJECT BY ID
+  # =========================
+
+  /projects/{id}:
+    get:
+      summary: Get project details
+      tags: [Projects]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Project fetched successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – no access to project
+        404:
+          description: Project not found
+
+    patch:
+      summary: Update project details
+      tags: [Projects]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        200:
+          description: Project updated successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – only owner or admin
+        404:
+          description: Project not found
+
+    delete:
+      summary: Delete project
+      tags: [Projects]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Project deleted successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – only owner or admin
+        404:
+          description: Project not found
+  
+  # =========================
+  # ACTIVITY LOGS
+  # =========================
+
+  /projects/{id}/activity:
+    get:
+      summary: Get project activity logs
+      tags: [Projects]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Activity logs fetched successfully
+        401:
+          description: Unauthorized
+
+
+
+
+/projects/public:
+  get:
+    summary: Get public projects
+    tags:
+      - Projects
+    parameters:
+      - name: search
+        in: query
+        schema:
+          type: string
+      - name: page
+        in: query
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        schema:
+          type: integer
+    responses:
+      200:
+        description: Public projects fetched successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                count:
+                  type: integer
+                total:
+                  type: integer
+                page:
+                  type: integer
+                totalPage:
+                  type: integer
+                projects:
+                  type: array
+                  items:
+                    type: object
+      500:
+        description: Internal server error

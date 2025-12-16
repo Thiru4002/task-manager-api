@@ -1,0 +1,176 @@
+openapi: 3.0.0
+
+info:
+  title: Project Membership API
+  description: APIs for project join requests and direct member management
+  version: 1.0.0
+
+tags:
+  - name: Project Membership
+    description: Project join requests and member management
+
+paths:
+
+  /membership/projects/{id}/join-request:
+    post:
+      summary: Request to join a project
+      tags:
+        - Project Membership
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Join request sent successfully
+        "400":
+          description: Already a member or request already sent
+        "401":
+          description: Unauthorized
+        "404":
+          description: Project not found
+
+  /membership/projects/{id}/join-requests:
+    get:
+      summary: Get pending join requests (Owner/Admin)
+      tags:
+        - Project Membership
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pending join requests fetched successfully
+        "403":
+          description: Forbidden
+        "404":
+          description: Project not found
+
+  /membership/projects/{id}/join-requests/{requestId}:
+    patch:
+      summary: Approve or reject a join request
+      tags:
+        - Project Membership
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - action
+              properties:
+                action:
+                  type: string
+                  enum:
+                    - approve
+                    - reject
+                  example: approve
+      responses:
+        "200":
+          description: Join request processed successfully
+        "400":
+          description: Invalid action or request already processed
+        "403":
+          description: Forbidden
+        "404":
+          description: Project or request not found
+
+  /membership/projects/{id}/add-member:
+    patch:
+      summary: Add a member directly to a project (Owner/Admin)
+      tags:
+        - Project Membership
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: string
+                  example: 64e9f2a1c9a123456789abcd
+      responses:
+        "200":
+          description: User added successfully
+        "400":
+          description: User already a member
+        "403":
+          description: Forbidden
+        "404":
+          description: User or project not found
+
+  /membership/projects/{id}/remove-member:
+    patch:
+      summary: Remove a member from a project (Owner/Admin)
+      tags:
+        - Project Membership
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - userId
+              properties:
+                userId:
+                  type: string
+                  example: 64e9f2a1c9a123456789abcd
+      responses:
+        "200":
+          description: User removed successfully
+        "400":
+          description: Invalid operation
+        "403":
+          description: Forbidden
+        "404":
+          description: User or project not found
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

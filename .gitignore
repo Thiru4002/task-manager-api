@@ -1,0 +1,16 @@
+# Backend dependencies
+Backend/node_modules/
+
+# Backend environment variables
+Backend/.env
+Backend/.env.*
+
+# Logs
+logs/
+*.log
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

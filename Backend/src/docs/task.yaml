@@ -1,0 +1,398 @@
+tags:
+  - name: Tasks
+    description: Task management APIs (CRUD, status, comments, assignment, attachments)
+
+paths:
+
+  # =========================
+  # TASK CORE
+  # =========================
+
+  /tasks:
+    post:
+      summary: Create a new task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, projectId]
+              properties:
+                title:
+                  type: string
+                  example: Build Swagger docs
+                description:
+                  type: string
+                projectId:
+                  type: string
+                priority:
+                  type: string
+                dueDate:
+                  type: string
+                  format: date
+                assignees:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        201:
+          description: Task created successfully
+        400:
+          description: Title and projectId are required
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – not a project member
+        404:
+          description: Project not found
+
+    get:
+      summary: Get all tasks (filters & pagination)
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: projectId
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: priority
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Tasks fetched successfully
+        401:
+          description: Unauthorized
+
+  /tasks/{id}:
+    get:
+      summary: Get single task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Task fetched successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – no project access
+        404:
+          description: Task not found
+
+    patch:
+      summary: Update task details
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                priority:
+                  type: string
+                dueDate:
+                  type: string
+                  format: date
+                assignees:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        200:
+          description: Task updated successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – no permission
+        404:
+          description: Task not found
+
+    delete:
+      summary: Delete task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Task deleted successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – no permission
+        404:
+          description: Task not found
+
+  # =========================
+  # TASK STATUS
+  # =========================
+
+  /tasks/{id}/status:
+    patch:
+      summary: Update task status
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [todo, in-progress, done]
+      responses:
+        200:
+          description: Task status updated successfully
+        400:
+          description: Invalid status value
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – no permission
+        404:
+          description: Task not found
+
+  # =========================
+  # COMMENTS
+  # =========================
+
+  /tasks/{id}/comments:
+    post:
+      summary: Create comment on task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+      responses:
+        201:
+          description: Comment created successfully
+        400:
+          description: Comment text is required
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – no permission
+        404:
+          description: Task not found
+
+  /tasks/{id}/comments/{commentId}:
+    delete:
+      summary: Delete comment from task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+        - name: commentId
+          in: path
+          required: true
+      responses:
+        200:
+          description: Comment deleted successfully
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden – not owner or admin
+        404:
+          description: Task or comment not found
+
+  # =========================
+  # ASSIGN / UNASSIGN
+  # =========================
+
+  /tasks/{id}/assign:
+    patch:
+      summary: Assign user to task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+      responses:
+        200:
+          description: User assigned successfully
+        400:
+          description: User not project member or already assigned
+        404:
+          description: Task not found
+
+  /tasks/{id}/unassign:
+    patch:
+      summary: Unassign user from task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+      responses:
+        200:
+          description: User unassigned successfully
+        400:
+          description: User not assigned or not project member
+        404:
+          description: Task not found
+
+  # =========================
+  # ATTACHMENTS
+  # =========================
+
+  /tasks/{id}/attachments:
+    post:
+      summary: Upload attachment to task
+      tags: [Tasks]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Attachment uploaded successfully
+        400:
+          description: No file uploaded
+        403:
+          description: Forbidden – no permission
+        404:
+          description: Task not found
+
+  delete:
+    summary: Remove attachment from task
+    tags: [Tasks]
+    security:
+      - bearerAuth: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [url]
+            properties:
+              url:
+                type: string
+                example: "https://res.cloudinary.com/ddtanb9ec/raw/upload/v123/taskmanager_uploads/file.pdf"
+    responses:
+      200:
+        description: Attachment removed successfully
+      400:
+        description: Invalid request
+      401:
+        description: Unauthorized
+      404:
+        description: Task or attachment not found
+

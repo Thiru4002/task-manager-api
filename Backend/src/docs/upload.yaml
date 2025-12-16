@@ -1,0 +1,41 @@
+tags:
+  - name: Upload
+    description: File upload APIs
+
+paths:
+
+  /upload/file:
+    post:
+      summary: Upload a file
+      tags: [Upload]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  url:
+                    type: string
+                    example: https://res.cloudinary.com/demo/image/upload/sample.jpg
+        400:
+          description: No file uploaded or invalid file
+        401:
+          description: Unauthorized
