@@ -114,7 +114,6 @@ This logic is implemented using:
 ## 📁 Project Structure
 
 ```
-``
 task-manager/
 │
 ├── backend/
@@ -135,7 +134,6 @@ task-manager/
 ├── package-lock.json
 ├── .gitignore
 └── README.md
-``
 
 ---
 
