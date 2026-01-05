@@ -12,6 +12,8 @@ This project focuses on **projects, team membership, and task assignment**, desi
 
 ---
 
+## 📺 Watch the API Testing Video:
+
 ## 🚀 Core Concept
 
 The **Task Manager API** is built around how teams work in real applications:
@@ -112,22 +114,27 @@ This logic is implemented using:
 ## 📁 Project Structure
 
 ```
-task-manager-api/
+task-manager/
 │
-├── src/
-│ ├── config/
-│ ├── controllers/
-│ ├── middlewares/
-│ ├── models/
-│ ├── routes/
-│ ├── docs/          # Swagger files
-│ ├── app.js
-│ └── server.js
+├── backend/
+│   └── src/
+│       ├── config/
+│       ├── controllers/
+│       ├── middlewares/
+│       ├── models/
+│       ├── routes/
+│       ├── utils/
+│       ├── docs/          # Swagger files
+│       ├── app.js
+│       └── server.js
+│
+├── frontend/              # demo UI
 │
 ├── package.json
+├── package-lock.json
 ├── .gitignore
 └── README.md
-```
+``
 
 ---
 
@@ -142,7 +149,7 @@ It demonstrates practical understanding of:
 * Project-user relationships
 * Role-based access control
 * Request lifecycle management
-* MongoDB schema design & indexing
+* MongoDB schema design
 * Middleware usage
 * Swagger API documentation
 * Debugging real backend issues

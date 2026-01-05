@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks - Task Manager</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/task.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">Task Manager</a>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <!-- Dynamically populated by navbar.js -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <h1 id="pageTitle">Tasks</h1>
+            <button class="btn btn-primary" onclick="openCreateTaskModal()">+ Create Task</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-section card">
+            <div class="filter-group">
+                <label class="filter-label">Search:</label>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="form-input filter-input" 
+                    placeholder="Search tasks..."
+                >
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Status:</label>
+                <select id="statusFilter" class="form-select filter-select">
+                    <option value="">All</option>
+                    <option value="todo">To Do</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Priority:</label>
+                <select id="priorityFilter" class="form-select filter-select">
+                    <option value="">All</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" onclick="applyFilters()">Apply Filters</button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loader" class="loader" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading tasks...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="message error" style="display: none;"></div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="message success" style="display: none;"></div>
+
+        <!-- Tasks Grid -->
+        <div id="tasksGrid" class="tasks-grid">
+            <!-- Dynamically populated -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <p>No tasks found. Create your first task!</p>
+        </div>
+
+        <!-- Create Task Modal -->
+        <div id="createTaskModal" class="modal" style="display: none;">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>Create New Task</h2>
+                    <button class="modal-close" onclick="closeCreateTaskModal()">&times;</button>
+                </div>
+                <form id="createTaskForm">
+                    <div class="form-group">
+                        <label for="taskTitle" class="form-label">Title *</label>
+                        <input type="text" id="taskTitle" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDescription" class="form-label">Description</label>
+                        <textarea id="taskDescription" class="form-textarea"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="taskStatus" class="form-label">Status</label>
+                            <select id="taskStatus" class="form-select">
+                                <option value="todo">To Do</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="done">Done</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPriority" class="form-label">Priority</label>
+                            <select id="taskPriority" class="form-select">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskDueDate" class="form-label">Due Date</label>
+                        <input type="date" id="taskDueDate" class="form-input">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeCreateTaskModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="createTaskBtn">Create Task</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Task Details Modal -->
+        <div id="taskDetailsModal" class="modal" style="display: none;">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2 id="taskDetailsTitle"></h2>
+                    <button class="modal-close" onclick="closeTaskDetailsModal()">&times;</button>
+                </div>
+                <div class="task-details-content">
+                    <!-- Task Info -->
+                    <div class="task-info-section">
+                        <div class="task-meta">
+                            <span class="task-status-badge" id="detailStatus"></span>
+                            <span class="task-priority-badge" id="detailPriority"></span>
+                        </div>
+                        <p id="detailDescription" class="task-description"></p>
+                        <div class="task-meta-info">
+                            <div><strong>Created by:</strong> <span id="detailCreator"></span></div>
+                            <div><strong>Due date:</strong> <span id="detailDueDate"></span></div>
+                            <div><strong>Assigned to:</strong> <span id="detailAssignees"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="task-actions-section" id="taskActions">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div class="comments-section">
+                        <h3>Comments</h3>
+                        <div class="comment-form">
+                            <textarea id="commentText" class="form-textarea" placeholder="Add a comment..."></textarea>
+                            <button class="btn btn-primary btn-sm" onclick="addComment()">Post Comment</button>
+                        </div>
+                        <div id="commentsList" class="comments-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+
+                    <!-- Attachments Section -->
+                    <div class="attachments-section">
+                        <h3>Attachments</h3>
+                        <div class="attachment-upload">
+                            <input type="file" id="attachmentFile" style="display: none;" onchange="uploadAttachment()">
+                            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('attachmentFile').click()">
+                                📎 Upload File
+                            </button>
+                        </div>
+                        <div id="attachmentsList" class="attachments-list">
+                            <!-- Dynamically populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Task Modal -->
+        <div id="editTaskModal" class="modal" style="display: none;">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>Edit Task</h2>
+                    <button class="modal-close" onclick="closeEditTaskModal()">&times;</button>
+                </div>
+                <form id="editTaskForm">
+                    <div class="form-group">
+                        <label for="editTaskTitle" class="form-label">Title *</label>
+                        <input type="text" id="editTaskTitle" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskDescription" class="form-label">Description</label>
+                        <textarea id="editTaskDescription" class="form-textarea"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editTaskStatus" class="form-label">Status</label>
+                            <select id="editTaskStatus" class="form-select">
+                                <option value="todo">To Do</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="done">Done</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editTaskPriority" class="form-label">Priority</label>
+                            <select id="editTaskPriority" class="form-select">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTaskDueDate" class="form-label">Due Date</label>
+                        <input type="date" id="editTaskDueDate" class="form-input">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditTaskModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="editTaskBtn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="assignTaskModal" class="modal" style="display:none">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h3>Assign Task</h3>
+                <button onclick="closeAssignModal()">×</button>
+                </div>
+
+                <select id="assignUserSelect" class="form-select"></select>
+
+                <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeAssignModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="assignTask()">Assign</button>
+                </div>
+            </div>
+        </div>
+
+
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/task.js"></script>
+</body>
+</html>

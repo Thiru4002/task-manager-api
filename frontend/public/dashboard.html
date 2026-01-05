@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Task Manager</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">Task Manager</a>
+            </div>
+            <div class="nav-links" id="navLinks"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p class="subtitle">Overview of your tasks and projects</p>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="loader" style="display:none;">
+            <div class="spinner"></div>
+            <p>Loading dashboard...</p>
+        </div>
+
+        <!-- Error -->
+        <div id="errorMessage" class="message error" style="display:none;"></div>
+
+        <!-- Stats Grid -->
+        <div id="statsGrid" class="stats-grid" style="display:none;">
+
+            <div class="stat-card clickable" id="card-total-projects">
+                <div class="stat-icon stat-icon-blue">📁</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalProjects">0</div>
+                    <div class="stat-label">Total Projects</div>
+                </div>
+            </div>
+
+            <div class="stat-card clickable" id="card-assigned-tasks">
+                <div class="stat-icon stat-icon-purple">📋</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="assignedTasks">0</div>
+                    <div class="stat-label">Assigned Tasks</div>
+                </div>
+            </div>
+
+            <div class="stat-card clickable" id="card-created-tasks">
+                <div class="stat-icon stat-icon-green">✏️</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="createdTasks">0</div>
+                    <div class="stat-label">Created Tasks</div>
+                </div>
+            </div>
+
+            <div class="stat-card clickable" id="card-completed-tasks">
+                <div class="stat-icon stat-icon-success">✅</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="completedTasks">0</div>
+                    <div class="stat-label">Completed Tasks</div>
+                </div>
+            </div>
+
+            <div class="stat-card clickable" id="card-pending-tasks">
+                <div class="stat-icon stat-icon-warning">⏳</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="pendingTasks">0</div>
+                    <div class="stat-label">Pending Tasks</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-orange">📅</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="tasksToday">0</div>
+                    <div class="stat-label">Tasks Today</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-cyan">📆</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="tasksThisWeek">0</div>
+                    <div class="stat-label">Tasks This Week</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-pink">🔔</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="recentActivity">0</div>
+                    <div class="stat-label">Recent Activities</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions" id="quickActions" style="display:none;">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="projects.html" class="btn btn-primary">View Projects</a>
+                <a href="tasks.html" class="btn btn-secondary">View Tasks</a>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

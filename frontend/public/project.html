@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - Task Manager</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/project.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html">Task Manager</a>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <!-- Dynamically populated by navbar.js -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Loading State -->
+        <div id="loader" class="loader" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading project...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="message error" style="display: none;"></div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="message success" style="display: none;"></div>
+
+        <!-- Project Details -->
+        <div id="projectDetails" style="display: none;">
+            <!-- Header -->
+            <div class="project-header">
+                <div class="project-header-content">
+                    <h1 id="projectName"></h1>
+                    <p id="projectDescription" class="project-description"></p>
+                    <div class="project-meta">
+                        <span class="project-owner">
+                            <span class="owner-icon">👤</span>
+                            <span id="projectOwnerName"></span>
+                        </span>
+
+                        <span class="project-visibility" id="projectVisibility"></span>
+                    </div>
+                </div>
+                <div class="project-actions" id="projectActions">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="project-tabs">
+                <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+                <button class="tab-btn" onclick="showTab('tasks')">Tasks</button>
+                <button class="tab-btn" onclick="showTab('team')">Team</button>
+                <button class="tab-btn" onclick="showTab('activity')">Activity</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Overview Tab -->
+                <div id="overviewTab" class="tab-pane active">
+                    <div class="card">
+                        <h2>Project Information</h2>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Owner:</span>
+                                <span class="info-value" id="ownerName"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Created:</span>
+                                <span class="info-value" id="createdDate"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Visibility:</span>
+                                <span class="info-value" id="visibilityValue"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Tab -->
+                <div id="tasksTab" class="tab-pane">
+
+                    <h3>Recent Tasks</h3>
+
+                    <div id="taskPreview" class="task-preview"></div>
+
+                    <div class="view-all">
+                        <a id="viewAllTasksBtn" class="btn btn-sm btn-secondary">
+                            View all tasks →
+                        </a>
+                    </div>
+
+                </div>
+
+
+                <!-- Team Tab -->
+               <div id="teamTab" class="tab-pane">
+
+                    <h3>Team Members</h3>
+
+                    <div id="teamPreview" class="team-preview"></div>
+
+                    <div class="view-all">
+                        <a id="manageTeamBtn" class="btn btn-sm btn-primary">
+                            Manage Team →
+                        </a>
+                    </div>
+
+                </div>
+
+
+                <!-- Activity Tab -->
+                <div id="activityTab" class="tab-pane">
+                    <div class="card">
+                        <h2>Recent Activity</h2>
+                        <div id="activityLoader" class="loader" style="display: none;">
+                            <div class="spinner"></div>
+                        </div>
+                        <div id="activityTimeline" class="activity-timeline">
+                            <!-- Dynamically populated -->
+                        </div>
+                        <div id="activityEmpty" class="empty-state" style="display: none;">
+                            <p>No recent activity</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Project Modal -->
+        <div id="editModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Project</h2>
+                    <button class="modal-close" onclick="closeEditModal()">&times;</button>
+                </div>
+                <form id="editProjectForm">
+                    <div class="form-group">
+                        <label for="editName" class="form-label">Project Name</label>
+                        <input type="text" id="editName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription" class="form-label">Description</label>
+                        <textarea id="editDescription" class="form-textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editVisibility" class="form-label">Visibility</label>
+                        <select id="editVisibility" class="form-select">
+                            <option value="true">Public</option>
+                            <option value="false">Private</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveEditBtn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/project.js"></script>
+</body>
+</html>

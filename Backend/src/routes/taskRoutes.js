@@ -44,6 +44,10 @@ router.delete("/:id/comments/:commentId", auth, task.deleteComments);
 router.patch("/:id/assign", auth, task.assign);
 router.patch("/:id/unassign", auth, task.unassign);
 
+// Dashboard – assigned tasks only
+router.get("/assigned/me", auth, task.getMyAssignedTasks);
+
+
 /* ================================
    ATTACHMENT ROUTES
 ================================ */
@@ -52,6 +56,6 @@ router.patch("/:id/unassign", auth, task.unassign);
 router.post("/:id/attachments", auth,upload.single("file"), task.addAttachment);
 
 // Remove attachment
-router.delete("/:id/attachments", auth, task.removeAttachment);
+router.patch("/:id/attachments", auth, task.removeAttachment);
 
 module.exports = router;

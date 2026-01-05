@@ -3,13 +3,15 @@ const cors = require("cors");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-const routes = require('./routes/index');
+const routes = require("./routes/index");
 const swaggerUi = require("swagger-ui-express");
 const { swaggerSpec } = require("./config/swagger");
 
 const app = express();
 
-//security middlewares..
+/* ===============================
+   SECURITY MIDDLEWARES
+================================ */
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
@@ -18,57 +20,76 @@ app.use(
   })
 );
 
-// enable CORS for frontend
+/* ===============================
+   CORS
+================================ */
 app.use(
   cors({
-    origin: "*", // allow all origins
-    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-
-// rate limiting
+/* ===============================
+   RATE LIMITING
+================================ */
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,  // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
-  message: "Too many requests from this IP, please try again later"
+  message: "Too many requests from this IP, please try again later",
 });
 app.use("/api/v1", limiter);
 
-// parse JSON()..
+/* ===============================
+   BODY PARSERS  (IMPORTANT)
+================================ */
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(express.urlencoded({ extended: true })); // 🔥 REQUIRED for file uploads
+app.use(morgan("dev"));
 
-//swagger setup..
+/* ===============================
+   SWAGGER
+================================ */
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
     swaggerOptions: {
       requestInterceptor: (req) => {
-        // 🔥 Fix Swagger multipart issue
+        // Fix multipart/form-data crash
         if (req.headers["Content-Type"]?.includes("multipart/form-data")) {
           delete req.headers["Content-Type"];
         }
         return req;
-      }
-    }
+      },
+    },
   })
 );
 
+/* ===============================
+   API ROUTES
+================================ */
+app.use("/api/v1", routes);
 
-//Swagger Middleware..
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+/* ===============================
+   GLOBAL ERROR HANDLER (CRITICAL)
+================================ */
+app.use((err, req, res, next) => {
+  console.error("GLOBAL ERROR:", err);
 
+  // Multer / Cloudinary safety
+  if (err.name === "MulterError") {
+    return res.status(400).json({
+      status: "error",
+      message: err.message,
+    });
+  }
 
-//API routes..
-app.use('/api/v1',routes);
-
-//global error handereler..
-app.use((err,req,res,next)=>{
-    console.error(err.stack || err);
-    res.status(500).json({err:err.message || "something went wrong"});
-})
+  res.status(err.status || 500).json({
+    status: "error",
+    message: err.message || "Something went wrong",
+  });
+});
 
 module.exports = app;

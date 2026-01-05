@@ -1,218 +1,242 @@
-const Project = require('../models/projectModel');
-const User = require('../models/userModel');
+const Project = require("../models/projectModel");
 const Activity = require("../models/activityModel");
 const logActivity = require("../utils/logActivity");
 
-//------------create project----------//
-const createProject = async (req,res) => {
-    try{
-        const {name,description}  = req.body;
-
-        //validate..
-        if(!name){
-            return res.status(400).json({message:"Project name is required"});
-        }
-
-        //create project with owner login user..
-        const project = await Project.create({
-            name,
-            description,
-            owner:req.user._id,
-            members:[req.user._id],
-        });
-
-        //log activity..
-        logActivity({
-          projectId:project._id,
-          userId:req.user._id,
-          action:`created project:${project.name}`,
-        });
-
-        res.status(201).json({
-            status:"success",
-            data:project,
-        });
-    }catch(error){
-        res.status(500).json({message:error.message});
-    }
+/**
+ * Helper: check owner
+ */
+const isOwner = (project, userId) => {
+  if (project.owner?._id) {
+    return project.owner._id.toString() === userId.toString();
+  }
+  return project.owner.toString() === userId.toString();
 };
 
-//--------------------get all projects-------------//
+/**
+ * Helper: check member
+ */
+const isMember = (project, userId) => {
+  return project.members.some(m =>
+    (m._id ? m._id.toString() : m.toString()) === userId.toString()
+  );
+};
+
+/* ===============================
+   CREATE PROJECT
+================================ */
+const createProject = async (req, res) => {
+  try {
+    const { name, description } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: "Project name is required" });
+    }
+
+    const project = await Project.create({
+      name,
+      description,
+      owner: req.user._id,
+      members: [req.user._id],
+    });
+
+    logActivity({
+      projectId: project._id,
+      userId: req.user._id,
+      action: `created project: ${project.name}`,
+    });
+
+    res.status(201).json({
+      status: "success",
+      data: project,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/* ===============================
+   GET ALL USER PROJECTS
+================================ */
 const getAllProjects = async (req, res, next) => {
   try {
     const { search } = req.query;
 
-    let queryObj = {
-      // user is owner OR member of the project
-      $or: [
-        { owner: req.user._id },
-        { members: req.user._id }
-      ]
+    const query = {
+      $or: [{ owner: req.user._id }, { members: req.user._id }],
     };
 
-    // Search by project name
     if (search) {
-      queryObj.name = { $regex: search, $options: 'i' };
+      query.name = { $regex: search, $options: "i" };
     }
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const projects = await Project.find(queryObj)
+    const projects = await Project.find(query)
       .skip(skip)
       .limit(limit)
       .populate("owner", "username email");
 
-    const total = await Project.countDocuments(queryObj);
+    const total = await Project.countDocuments(query);
 
     res.status(200).json({
       status: "success",
       count: projects.length,
       total,
       totalPage: Math.ceil(total / limit),
-      data: projects
+      data: projects,
     });
-
   } catch (err) {
     next(err);
   }
 };
 
-//---------public projects---------//
-const getPublicProject = async (req,res,next) =>{
-  try{
-    let queryObj = {};
+/* ===============================
+   GET PUBLIC PROJECTS
+================================ */
+const getPublicProject = async (req, res, next) => {
+  try {
+    const query = {};
 
-    //search by title...
-    if(req.query.search){
-      queryObj.title = {regex:req.query.search,$options:'i'};
+    if (req.query.search) {
+      query.name = { $regex: req.query.search, $options: "i" };
     }
 
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
-    const skip = (page-1)*limit;
+    const skip = (page - 1) * limit;
 
-    const projects = await Project.find(queryObj).skip(skip).limit(limit).populate("owner","username email");
+    const projects = await Project.find(query)
+      .skip(skip)
+      .limit(limit)
+      .populate("owner", "username email");
 
-    const total = await Project.countDocuments(queryObj);
+    const total = await Project.countDocuments(query);
 
     res.status(200).json({
-      success:true,
-      count:projects.length,
+      status: "success",
+      count: projects.length,
       total,
       page,
-      totalPage:Math.ceil(total/limit),
-      projects
+      totalPage: Math.ceil(total / limit),
+      projects,
     });
-
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 };
 
+/* ===============================
+   GET SINGLE PROJECT
+================================ */
+const getProject = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-//-----------------get project-----------//
-const getProject = async (req,res) => {
-    try{
-        const {id} = req.params;
+    const project = await Project.findById(id)
+      .populate("owner", "username email")
+      .populate("members", "username email");
 
-        const project = await Project.findById(id);
-
-        if(!project){
-            return res.status(404).json({message:"Project not found"});
-        }
-
-        //check permission..
-        if (!project.members.map(m => m.toString()).includes(req.user._id.toString())) {
-            return res.status(403).json({message:"you do not have access"});
-        }
-
-        res.status(200).json({
-            status:"success",
-            date:project,
-        });
-    }catch(error){
-        return res.status(500).json({message:error.message});
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
     }
+
+    // 🔐 Permission: owner or member
+    if (
+      !isOwner(project, req.user._id) &&
+      !isMember(project, req.user._id)
+    ) {
+      return res.status(403).json({ message: "You do not have access" });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: project,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-//------------update project---------------//
-const updateProject = async (req,res,next) => {
-    try{
-        const {id} = req.params;
-        const {name,description} = req.body;
+/* ===============================
+   UPDATE PROJECT
+================================ */
+const updateProject = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, description } = req.body;
 
-        const project = await Project.findById(id);
+    const project = await Project.findById(id);
 
-        if(!project){
-            return res.status(404).json({message:"project is not found"});
-        }
-
-        if(project.owner.toString() !=req.user._id.toString() && req.user.role !=="admin"){
-            return res.status(403).json({message:"Not allowed"});
-        }
-
-        project.name = name || project.name;
-        project.description = description || project.description;
-
-        await project.save();
-
-        //log activity..
-        logActivity({
-          projectId:project._id,
-          userId:req.user._id,
-          action:`updated project:${project.name}`,
-        });
-
-        res.status(200).json({
-            status:"success",
-            data:project
-        });
-    }catch(err){
-        next(err);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
     }
+
+    if (!isOwner(project, req.user._id) && req.user.role !== "admin") {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    project.name = name || project.name;
+    project.description = description || project.description;
+
+    await project.save();
+
+    logActivity({
+      projectId: project._id,
+      userId: req.user._id,
+      action: `updated project: ${project.name}`,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: project,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-//--------------delete project--------------//
-const deleteProject = async (req,res,next) => {
-    try{
-        const {id} = req.params;
+/* ===============================
+   DELETE PROJECT
+================================ */
+const deleteProject = async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-        const project = await Project.findById(id);
+    const project = await Project.findById(id);
 
-        if(!project){
-            return res.status(404).json({message:"project is not found"});
-        }
-
-        if(project.owner.toString() !== req.user._id.toString() && req.user.role !=="admin"){
-            return res.status(403).json({message:"you don't have permission"});
-        }
-
-        await Project.findByIdAndDelete(id);
-
-        //log activity..
-        logActivity({
-          projectId:project._id,
-          userId:req.user._id,
-          action:`deleted project:${project.name}`,
-        });
-
-
-        res.status(200).json({
-            status:"success",
-            message:"Project delete successfull"
-        });
-    }catch(err){
-        next(err);
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
     }
+
+    if (!isOwner(project, req.user._id) && req.user.role !== "admin") {
+      return res.status(403).json({ message: "You do not have permission" });
+    }
+
+    await Project.findByIdAndDelete(id);
+
+    logActivity({
+      projectId: project._id,
+      userId: req.user._id,
+      action: `deleted project: ${project.name}`,
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Project deleted successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-//-----------activity controllers--------------//
-
+/* ===============================
+   ACTIVITY LOGS
+================================ */
 const getActivityLogs = async (req, res, next) => {
   try {
-    const { id } = req.params; // projectId
+    const { id } = req.params;
 
     const logs = await Activity.find({ projectId: id })
       .populate("userId", "username email")
@@ -224,20 +248,17 @@ const getActivityLogs = async (req, res, next) => {
       count: logs.length,
       data: logs,
     });
-
   } catch (err) {
     next(err);
   }
 };
 
-
-
 module.exports = {
   createProject,
   getAllProjects,
+  getPublicProject,
   getProject,
   updateProject,
   deleteProject,
   getActivityLogs,
-  getPublicProject
 };

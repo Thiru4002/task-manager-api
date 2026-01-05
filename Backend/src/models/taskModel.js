@@ -47,12 +47,23 @@ const taskSchema = new mongoose.Schema(
         dueDate:{
             type:Date,
         },
-        attachments:[
-            {
-                type:String,
-                trim:true
-            }
-        ],
+        attachments: [
+                {
+                    url: { type: String, required: true },
+                    name: { type: String }, // ✅ ADD
+                    uploadedBy: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "User",
+                    required: true,
+                    },
+                    uploadedAt: {
+                    type: Date,
+                    default: Date.now,
+                    },
+                },
+            ],
+
+
         comments:[
             {
                 user:{

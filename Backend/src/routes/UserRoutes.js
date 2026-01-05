@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post('/register',user.register);
 router.post('/login',user.login);
+router.get("/by-email", auth,user.getUserByEmail);
 
 
 //dashBoard status ............
