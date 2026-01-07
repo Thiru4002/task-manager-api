@@ -55,7 +55,14 @@ app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+
     swaggerOptions: {
+      docExpansion: "none",               // 🔽 collapse all endpoints
+      defaultModelsExpandDepth: -1,       // ❌ hide Schemas section
+      filter: true,                       // 🔍 search box
+      displayRequestDuration: true,       // ⏱ request time
+
       requestInterceptor: (req) => {
         // Fix multipart/form-data crash
         if (req.headers["Content-Type"]?.includes("multipart/form-data")) {
@@ -64,8 +71,34 @@ app.use(
         return req;
       },
     },
+
+    // 🎨 UI-only styling (safe & clean)
+    customCss: `
+      body {
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      .swagger-ui .opblock {
+        border-radius: 10px;
+        margin-bottom: 14px;
+      }
+
+      .swagger-ui .opblock-summary {
+        padding: 12px;
+        font-size: 15px;
+      }
+
+      .swagger-ui .info {
+        margin-bottom: 30px;
+      }
+
+      .swagger-ui section.models {
+        display: none;
+      }
+    `,
   })
 );
+
 
 /* ===============================
    API ROUTES

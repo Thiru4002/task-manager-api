@@ -8,7 +8,7 @@ This project focuses on **projects, team membership, and task assignment**, desi
 ## 📘 API Documentation (Swagger UI)
 
 👉 `/api-docs`
-(Available after running the project locally or via deployed URL)
+(Available for live testing)
 
 ---
 
@@ -113,7 +113,7 @@ This logic is implemented using:
 
 ## 📁 Project Structure
 
----
+```
 
 task-manager/
 │
@@ -135,6 +135,8 @@ task-manager/
 ├── package-lock.json
 ├── .gitignore
 └── README.md
+
+```
 
 ---
 
