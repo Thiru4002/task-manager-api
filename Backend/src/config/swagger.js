@@ -13,10 +13,11 @@ const swaggerOptions = {
 
     servers: [
       {
-        url: "http://localhost:5000/api/v1",
-        description: "Local development server",
+        url: "/",
+        description: "Current server",
       },
     ],
+
 
     components: {
       securitySchemes: {
