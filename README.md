@@ -7,7 +7,7 @@ This project focuses on **projects, team membership, and task assignment**, desi
 
 ## 📘 API Documentation (Swagger UI)
 
-👉 `/api-docs`
+👉 `https://task-manager-backend-smdf.onrender.com/api-docs`
 (Available for live testing)
 
 ---
