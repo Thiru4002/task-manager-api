@@ -127,6 +127,42 @@ const getPublicProject = async (req, res, next) => {
   }
 };
 
+/* ==============================
+    Get public single project
+================================= */
+
+// Get single public project (overview)
+const getPublicProjectById = async (req, res, next) => {
+  try {
+    const project = await Project.findById(req.params.id)
+      .select("name description owner members createdAt")
+      .populate("owner", "username")
+      .populate("members", "_id"); // only for count
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        _id: project._id,
+        name: project.name,
+        description: project.description,
+        owner: project.owner,
+        membersCount: project.members.length,
+        createdAt: project.createdAt,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
 /* ===============================
    GET SINGLE PROJECT
 ================================ */
@@ -257,6 +293,7 @@ module.exports = {
   createProject,
   getAllProjects,
   getPublicProject,
+  getPublicProjectById,
   getProject,
   updateProject,
   deleteProject,

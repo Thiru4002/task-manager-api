@@ -1,0 +1,53 @@
+/* ==============================
+   Project Overview Fix
+================================ */
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.project-overview {
+  max-width: 700px;
+  background: #111;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.project-overview h1 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.project-overview .description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cfcfcf;
+  margin-bottom: 24px;
+}
+
+.project-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 28px;
+}
+
+.project-meta strong {
+  color: #fff;
+}
+
+.project-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.project-actions .btn {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+}

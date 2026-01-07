@@ -66,10 +66,14 @@ async function apiRequest(endpoint, options = {}) {
 
         // Handle 401 Unauthorized - redirect to login
         if (response.status === 401) {
-            removeToken();
-            window.location.href = 'login.html';
-            throw new Error('Unauthorized. Please login again.');
+            // Redirect ONLY if token exists (protected pages)
+            if (getToken()) {
+                removeToken();
+                window.location.href = 'login.html';
+            }
+            throw new Error('Unauthorized');
         }
+
 
         // Parse JSON response
         let data = null;

@@ -113,7 +113,6 @@ This logic is implemented using:
 
 ## 📁 Project Structure
 
-```
 task-manager/
 │
 ├── backend/

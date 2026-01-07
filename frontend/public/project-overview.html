@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Project Overview</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/project.css">
+</head>
+<body>
+
+ <main class="container project-page">
+
+  <section class="project-header">
+    <div class="project-header-content">
+      <h1 id="projectTitle"></h1>
+      <p id="projectDescription" class="project-description"></p>
+
+        <!-- Success Message -->
+            <div id="successMessage" class="message success" style="display: none;"></div>
+
+        <!-- Error Message -->
+            <div id="errorMessage" class="message error" style="display: none;"></div>
+
+
+      <div class="project-meta">
+        <!-- Owner -->
+        <div class="project-owner">
+          <span class="owner-icon">👤</span>
+          <span id="projectOwner">—</span>
+        </div>
+
+        <!-- Members count -->
+        <div class="project-owner">
+          <span class="owner-icon">👥</span>
+          <span>
+            Members:
+            <strong id="projectMembers">—</strong>
+          </span>
+        </div>
+
+        <!-- Created date -->
+        <div class="project-owner">
+          <span class="owner-icon">📅</span>
+          <span>
+            Created:
+            <strong id="projectCreated">—</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+</main>
+
+    <script src="js/api.js"></script>
+    <script src="js/project-overview.js"></script>
+</body>
+</html>

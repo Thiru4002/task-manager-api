@@ -6,6 +6,7 @@ const router = express.Router();
 
 //public routes..
 router.get("/public",project.getPublicProject);
+router.get("/public/:id",project.getPublicProjectById);
 
 //project routes..
 router.post("/",auth,project.createProject);

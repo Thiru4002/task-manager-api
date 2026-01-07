@@ -365,3 +365,50 @@ body {
 .gap-1 { gap: 0.5rem; }
 .gap-2 { gap: 1rem; }
 .gap-3 { gap: 1.5rem; }
+
+/* ==============================
+   Project Overview (Scoped)
+================================ */
+
+.project-overview-page {
+  padding-top: 40px;
+}
+
+.project-overview-page .project-overview {
+  max-width: 700px;
+  background: #111;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.project-overview-page h1 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.project-overview-page .description {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cfcfcf;
+  margin-bottom: 24px;
+}
+
+.project-overview-page .project-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 28px;
+}
+
+.project-overview-page .project-meta strong {
+  color: #fff;
+}
+
+.project-overview-page .project-actions {
+  display: flex;
+  gap: 12px;
+}
