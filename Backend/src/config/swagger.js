@@ -13,10 +13,11 @@ const swaggerOptions = {
 
     servers: [
       {
-        url: "/",
-        description: "Current server",
+        url: "/api/v1",
+        description: "Task Manager API",
       },
     ],
+
 
 
     components: {
