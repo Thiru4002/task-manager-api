@@ -10,47 +10,60 @@
 
  <main class="container project-page">
 
-  <section class="project-header">
-    <div class="project-header-content">
-      <h1 id="projectTitle"></h1>
-      <p id="projectDescription" class="project-description"></p>
+  <!-- Loader (Shows while loading) -->
+  <div id="loader" class="loader" style="display: block;">
+    <div class="spinner"></div>
+    <p>Loading project details...</p>
+  </div>
 
-        <!-- Success Message -->
-            <div id="successMessage" class="message success" style="display: none;"></div>
+  <!-- Project Content (Hidden initially, shown after loading) -->
+  <div id="projectContent" style="display: none;">
+    
+    <!-- Success Message -->
+    <div id="successMessage" class="message success" style="display: none;"></div>
 
-        <!-- Error Message -->
-            <div id="errorMessage" class="message error" style="display: none;"></div>
+    <!-- Error Message -->
+    <div id="errorMessage" class="message error" style="display: none;"></div>
 
+    <section class="project-header">
+      <div class="project-header-content">
+        <h1 id="projectTitle"></h1>
+        <p id="projectDescription" class="project-description"></p>
 
-      <div class="project-meta">
-        <!-- Owner -->
-        <div class="project-owner">
-          <span class="owner-icon">👤</span>
-          <span id="projectOwner">—</span>
+        <div class="project-meta">
+          <!-- Owner -->
+          <div class="project-owner">
+            <span class="owner-icon">👤</span>
+            <span id="projectOwner">—</span>
+          </div>
+
+          <!-- Members count -->
+          <div class="project-owner">
+            <span class="owner-icon">👥</span>
+            <span>
+              Members:
+              <strong id="projectMembers">—</strong>
+            </span>
+          </div>
+
+          <!-- Created date -->
+          <div class="project-owner">
+            <span class="owner-icon">📅</span>
+            <span>
+              Created:
+              <strong id="projectCreated">—</strong>
+            </span>
+          </div>
         </div>
 
-        <!-- Members count -->
-        <div class="project-owner">
-          <span class="owner-icon">👥</span>
-          <span>
-            Members:
-            <strong id="projectMembers">—</strong>
-          </span>
-        </div>
-
-        <!-- Created date -->
-        <div class="project-owner">
-          <span class="owner-icon">📅</span>
-          <span>
-            Created:
-            <strong id="projectCreated">—</strong>
-          </span>
+        <!-- Action Buttons -->
+        <div class="project-actions" id="projectAction">
+          <!-- Buttons will be rendered here by JavaScript -->
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-
+  </div>
 
 </main>
 

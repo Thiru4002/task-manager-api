@@ -1,5 +1,5 @@
 /* ==============================
-   Project Overview Fix
+   Project Overview Styles
 ================================ */
 
 .container {
@@ -10,16 +10,19 @@
 
 .project-overview {
   max-width: 700px;
+  margin: 0 auto;
   background: #111;
   padding: 32px;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid #222;
 }
 
 .project-overview h1 {
   font-size: 2rem;
   margin-bottom: 12px;
   color: #fff;
+  line-height: 1.2;
 }
 
 .project-overview .description {
@@ -36,39 +39,94 @@
   font-size: 0.9rem;
   color: #aaa;
   margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.project-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .project-meta strong {
   color: #fff;
+  font-weight: 600;
 }
 
 .project-actions {
   display: flex;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .project-actions .btn {
   padding: 10px 18px;
   font-size: 0.95rem;
+  min-width: 140px;
+}
+
+/* Messages */
+.message {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.message.success {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.message.error {
+  background-color: rgba(220, 38, 38, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+/* Loader */
+.loader {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #333;
+  border-top-color: #dc2626;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader p {
+  color: #aaa;
+  font-size: 0.95rem;
 }
 
 /* ==============================
-   Project Overview – Mobile View
+   Mobile View (Tablet)
 ================================ */
 
 @media (max-width: 768px) {
-
   .container {
-    padding: 20px 12px;
+    padding: 24px 16px;
   }
 
   .project-overview {
-    padding: 20px;
+    padding: 24px;
     border-radius: 10px;
   }
 
   .project-overview h1 {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
   }
 
   .project-overview .description {
@@ -76,17 +134,82 @@
   }
 
   .project-meta {
-    gap: 12px;
+    gap: 16px;
     font-size: 0.85rem;
+    padding-bottom: 16px;
+  }
+
+  .project-actions {
+    gap: 10px;
+  }
+
+  .project-actions .btn {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+    min-width: 120px;
+  }
+}
+
+/* ==============================
+   Mobile View (Phone)
+================================ */
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px;
+  }
+
+  .project-overview {
+    padding: 20px 16px;
+    border-radius: 8px;
+  }
+
+  .project-overview h1 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .project-overview .description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .project-meta {
+    gap: 12px;
+    font-size: 0.8rem;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+  }
+
+  .project-meta > div {
+    min-width: calc(50% - 6px);
   }
 
   .project-actions {
     flex-direction: column;
+    gap: 10px;
   }
 
   .project-actions .btn {
     width: 100%;
     font-size: 0.9rem;
-    padding: 10px;
+    padding: 12px;
+    min-width: unset;
+  }
+
+  .message {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  .loader {
+    padding: 40px 20px;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
   }
 }

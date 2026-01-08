@@ -201,32 +201,6 @@ function hideLoader(elementId = 'loader') {
     }
 }
 
-/* ==============================
-   Mobile Navbar Hide on Scroll
-================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-  const navbar = document.querySelector(".navbar");
-  if (!navbar) return;
-
-  let lastScrollY = window.scrollY;
-
-  window.addEventListener("scroll", () => {
-    const currentScrollY = window.scrollY;
-
-    // Scroll down → hide navbar
-    if (currentScrollY > lastScrollY && currentScrollY > 80) {
-      navbar.classList.add("nav-hidden");
-    }
-    // Scroll up → show navbar
-    else {
-      navbar.classList.remove("nav-hidden");
-    }
-
-    lastScrollY = currentScrollY;
-  });
-});
-
 
 /**
  * Redirect if not authenticated
