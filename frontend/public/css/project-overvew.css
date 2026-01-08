@@ -51,3 +51,42 @@
   padding: 10px 18px;
   font-size: 0.95rem;
 }
+
+/* ==============================
+   Project Overview – Mobile View
+================================ */
+
+@media (max-width: 768px) {
+
+  .container {
+    padding: 20px 12px;
+  }
+
+  .project-overview {
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .project-overview h1 {
+    font-size: 1.5rem;
+  }
+
+  .project-overview .description {
+    font-size: 0.95rem;
+  }
+
+  .project-meta {
+    gap: 12px;
+    font-size: 0.85rem;
+  }
+
+  .project-actions {
+    flex-direction: column;
+  }
+
+  .project-actions .btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+}

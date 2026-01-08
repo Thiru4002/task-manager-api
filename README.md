@@ -10,6 +10,9 @@ This project focuses on **projects, team membership, and task assignment**, desi
 👉 **https://task-manager-backend-smdf.onrender.com/api-docs**
 (Available for live testing)
 
+### 🔗 Frontend (Demo UI)
+**https://task-manager-c5ku0q6nb-thiru4002s-projects.vercel.app**
+
 ---
 
 ## 📺 Watch the API Testing Video:

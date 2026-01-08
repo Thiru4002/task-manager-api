@@ -412,3 +412,30 @@ body {
   display: flex;
   gap: 12px;
 }
+
+/* ==============================
+   Mobile Navbar Hide on Scroll
+================================ */
+
+/* Hidden state (used by JS) */
+.navbar.nav-hidden {
+  transform: translateY(-100%);
+}
+
+/* Mobile-specific behavior */
+@media (max-width: 768px) {
+  .navbar {
+    position: fixed; /* override sticky on mobile */
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Prevent content jump */
+  body {
+    padding-top: 64px; /* adjust if navbar height differs */
+  }
+}
+
