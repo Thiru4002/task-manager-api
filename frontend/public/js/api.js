@@ -4,7 +4,7 @@
  */
 
 // Base API URL - Update this to match your backend server
-const API_BASE_URL = 'http://localhost:5000/api/v1';
+const API_BASE_URL = 'https://task-manager-backend-smdf.onrender.com/api/v1';
 
 /**
  * Get JWT token from localStorage
