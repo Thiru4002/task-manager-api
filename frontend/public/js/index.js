@@ -130,29 +130,36 @@ async function handleJoinRequest(projectId, btn) {
       'Join request sent successfully'
     );
 
-  } catch (error) {
-
+  }catch (error) {
     const msg = error.message?.toLowerCase() || "";
 
-    if (msg.includes("already") || msg.includes("pending")) {
-    btn.disabled = true;
-    btn.textContent = 'Request Already Sent';
-    btn.classList.remove('btn-primary');
-    btn.classList.add('btn-secondary');
+    if (msg.includes("already a member")) {
+      btn.disabled = true;
+      btn.textContent = 'Already a Member';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-secondary');
 
-    showError(
+      showError(
         'errorMessage',
-        'You have already sent a join request for this project'
-    );
-    return;
+        'You are already a member of this project'
+      );
+      return;
     }
 
-    // fallback (real error)
+    if (msg.includes("pending")) {
+      btn.disabled = true;
+      btn.textContent = 'Request Pending';
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-secondary');
+      return;
+    }
+
+    // fallback
     btn.disabled = false;
     btn.textContent = 'Request to Join';
     showError('errorMessage', error.message || 'Failed to send join request');
-
   }
+
 }
 
 function openProjectOverview(projectId) {
