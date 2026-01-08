@@ -31,11 +31,7 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
-
-    /* Reserve space for sticky/fixed navbar */
-    padding-top: 72px;
 }
-
 
 /* ===== Navigation Bar ===== */
 .navbar {
@@ -50,7 +46,7 @@ body {
 .nav-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0.6rem 2rem;
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -439,7 +435,7 @@ body {
 
   /* Prevent content jump */
   body {
-    padding-top: 84px; /* adjust if navbar height differs */
+    padding-top: 64px; /* adjust if navbar height differs */
   }
 }
 
