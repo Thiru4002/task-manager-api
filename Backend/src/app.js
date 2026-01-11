@@ -67,6 +67,17 @@ app.use(
   })
 );
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    service: 'Task Manager API',
+    status: 'running',
+    version: 'v1',
+    docs: '/api-docs',
+    basePath: '/api/v1'
+  });
+});
+
+
 /* ===============================
    API ROUTES
 ================================ */
